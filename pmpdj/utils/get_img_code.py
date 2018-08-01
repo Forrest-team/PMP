@@ -98,10 +98,10 @@ class ValidCodeImg:
         return pic_data, valid_string
 
 
-if __name__ == '__main__':
-    img = ValidCodeImg()
-    data, valid_str = img.get_valid_code_img()
-    print(valid_str)
-
-    with open('../media/var_code.png', 'wb') as f:
-        f.write(data)
+# if __name__ == '__main__':
+#     img = ValidCodeImg()
+#     data, valid_str = img.get_valid_code_img()
+#     print(valid_str)
+#
+#     with open('../media/var_code.png', 'wb') as f:
+#         f.write(data)
