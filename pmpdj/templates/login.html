@@ -65,8 +65,8 @@
 <div class="tyg-div">
 	<ul>
     	<li>让</li>
-    	<li><div style="margin-left:20px;">数</div></li>
-    	<li><div style="margin-left:40px;">据</div></li>
+    	<li><div style="margin-left:20px;">服</div></li>
+    	<li><div style="margin-left:40px;">务</div></li>
     	<li><div style="margin-left:60px;">改</div></li>
     	<li><div style="margin-left:80px;">变</div></li>
     	<li><div style="margin-left:100px;">生</div></li>
@@ -75,8 +75,8 @@
 </div> 
 <div id="contPar" class="contPar">
 	<div id="page1"  style="z-index:1;">
-		<div class="title0">行业智慧能力平台</div>
-		<div class="title1">旅游、交通、气象、公共安全、大数据</div>
+		<div class="title0">物业智慧管理平台</div>
+		<div class="title1">卫生、和谐、安全、娱乐为一体的高档小区</div>
 		<div class="imgGroug">
 			<ul>
 				<img alt="" class="img0 png" src="/static/images/page1_0.png">
@@ -89,17 +89,18 @@
 </div>
 <div class="tyg-div-denglv">
 	<div class="tyg-div-form">
-		<form action="">
-			<h2>登录</h2><p class="tyg-p">欢迎访问  智慧能力</p>
+		<form action="" method="post">
+            {% csrf_token %}
+			<h2>登录</h2><p class="tyg-p">欢迎访问  XX物业</p>
 			<div style="margin:5px 0px;">
-				<input type="text" placeholder="请输入账号..."/>
+				<input type="text" name="number" placeholder="请输入账号..."/>
 			</div>
 			<div style="margin:5px 0px;">
-				<input type="text" placeholder="请输入密码..."/>
+				<input type="text" name="password" placeholder="请输入密码..."/>
 			</div>
 			<div style="margin:5px 0px;">
-				<input type="text" style="width:150px;" placeholder="请输入验证码..."/>
-				<img id="btn-img" src="/media/var_code.png" style="vertical-align:bottom;" alt="验证码"/>
+				<input type="text" name="img_code" style="width:150px;" placeholder="请输入验证码..."/>
+				<img id="verify-img" src="" style="vertical-align:bottom;" alt="验证码"/>
 			</div>
 			<button type="submit" >登<span style="width:20px;"></span>录</button>
 		</form>
@@ -115,7 +116,25 @@ More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板�
 DD_belatedPNG.fix(".png");
 </script>
 <![endif]-->
+<script>
+    $(document).ready(function () {
+        $.get('/user/getImgCode/', function () {
+            $('#verify-img').attr('src', '/media/var_code.png?' + Math.random())
+        })
+    });
 
+    $(function () {
+        $('#verify-img').on('click', function (evt) {
+            var verify = $(evt.target);
+            $.get('/user/getImgCode/', function (data) {
+                if (data.code == 200) {
+                    var timestamp = new Date().getTime();
+                    verify.attr('src', '/media/var_code.png' + '?' + timestamp );
+                }
+            });
+        })
+    })
+</script>
 
 </body>
 </html>

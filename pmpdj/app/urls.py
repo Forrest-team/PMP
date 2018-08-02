@@ -20,5 +20,6 @@ from app import views
 urlpatterns = [
     path('login/', views.login, name='login'),
     path('getImgCode/', views.get_img_code, name='getImgCode'),
+    path('mineInfo/', views.user_mine_info, name='mineInfo'),
 ]
 

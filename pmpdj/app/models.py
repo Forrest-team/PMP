@@ -138,6 +138,7 @@ class Notice(models.Model):
     notice_id = models.AutoField(primary_key=True)
     comment = models.TextField(blank=True, null=True)
     create_time = models.DateTimeField()
+    customers = models.ManyToManyField(Customer, through='Relationship11')
 
     class Meta:
         managed = False
@@ -160,6 +161,8 @@ class Orders(models.Model):
 
 class Owner(models.Model):
     owner_id = models.AutoField(primary_key=True)
+    number = models.CharField(max_length=16, unique=True)
+    password = models.CharField(max_length=64)
     owner_name = models.CharField(max_length=20, blank=True, null=True)
     owner_phone = models.IntegerField(blank=True, null=True)
     owner_sex = models.IntegerField(blank=True, null=True)
