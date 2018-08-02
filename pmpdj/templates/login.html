@@ -93,10 +93,10 @@
             {% csrf_token %}
 			<h2>登录</h2><p class="tyg-p">欢迎访问  XX物业</p>
 			<div style="margin:5px 0px;">
-				<input type="text" name="number" placeholder="请输入账号..."/>
+				<input type="text" required="required" name="number" placeholder="请输入账号..."/>
 			</div>
 			<div style="margin:5px 0px;">
-				<input type="text" name="password" placeholder="请输入密码..."/>
+				<input type="text" required="required" name="password" placeholder="请输入密码..."/>
 			</div>
 			<div style="margin:5px 0px;">
 				<input type="text" name="img_code" style="width:150px;" placeholder="请输入验证码..."/>

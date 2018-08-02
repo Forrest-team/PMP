@@ -1,6 +1,5 @@
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse
 
 from app.models import ImgCode, Owner
 from utils.get_img_code import ValidCodeImg
