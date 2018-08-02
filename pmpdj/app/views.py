@@ -114,3 +114,19 @@ def update_info(request):
     """
     user = request.session.get('user_id')
     return render(request, 'user/update_info.html', {'user': user})
+
+
+def get_user_no(request):
+    """
+    通过user_id 拿到模型，返回房屋等数据
+    :param request:
+    :return:
+    """
+    if request.method == 'GET':
+        number = request.session.get('user_id')
+        user = Owner.objects.filter(number=number).first()
+        json = {
+            'code': 200,
+            'user': user.to_dict
+        }
+        return JsonResponse(json)

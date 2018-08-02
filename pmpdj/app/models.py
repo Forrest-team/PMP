@@ -171,6 +171,16 @@ class Owner(models.Model):
     owner_car = models.IntegerField(blank=True, null=True)
     owner_icon = models.CharField(max_length=256, blank=True, null=True)
 
+    @property
+    def to_dict(self):
+        return {
+            'id': self.owner_id,
+            'number': self.number,
+            'username': self.owner_name,
+            'sex': self.owner_sex,
+            'phone': self.owner_phone
+        }
+
     class Meta:
         managed = False
         db_table = 'owner'

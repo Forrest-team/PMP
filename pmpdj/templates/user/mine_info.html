@@ -154,7 +154,7 @@
 	<div class="touyin"></div>
 	<div class="zynr_db">
 		<div class="lujing">
-			<h2>个人中心</h2>
+			<h2>个人信息</h2>
 			<p>您的位置：首页 > 个人中心</p>
 		</div>
 		<ul class="skb" style="margin-bottom: 20px;">
@@ -166,6 +166,11 @@
 		<!--内容-->
 		<div class="gsjj_nr">
 			<form action="" method="post" class="messages">
+                <div class="messlist">
+			      	<label>*账号：</label>
+			      	<input type="text" disabled />
+			      	<div class="clears"></div>
+			    </div>
 			    <div class="messlist">
 			      	<label>*姓名：</label>
 			      	<input type="text" placeholder="姓名" />
@@ -226,4 +231,11 @@
 
 
 </body>
+<script>
+    $(document).ready(function () {
+        $.get('/user/getUserNo', function (data) {
+
+        })
+    })
+</script>
 </html>
