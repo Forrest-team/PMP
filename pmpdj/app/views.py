@@ -40,7 +40,7 @@ def login(request):
             ctx = {'code': 1002, 'msg': '用户名或密码输入错误'}
             return render(request, 'login.html', ctx)
 
-        request.session['user_id'] = user.number
+        request.session['user_id'] = user.owner_id
         # 设置session值存活时间为一天(86400秒)
         request.session.set_expiry(86400)
 
@@ -92,8 +92,10 @@ def user_mine_info(request):
     :return:
     """
     if request.method == 'GET':
-        user = request.session.get('user_id')
-        return render(request, 'user/mine_info.html', {'user': user})
+        user_id = request.session.get('user_id')
+        user = Owner.objects.filter(owner_id=user_id).first()
+        if user:
+            return render(request, 'user/mine_info.html', {'user': user})
 
 
 def living_pay(request):
@@ -118,15 +120,14 @@ def update_info(request):
 
 def get_user_no(request):
     """
-    通过user_id 拿到模型，返回房屋等数据
+    通过user_id 拿到模型Owner，返回房屋等数据
     :param request:
     :return:
     """
     if request.method == 'GET':
-        number = request.session.get('user_id')
-        user = Owner.objects.filter(number=number).first()
-        json = {
-            'code': 200,
-            'user': user.to_dict
-        }
+        user_id = request.session.get('user_id')
+        user = Owner.objects.filter(owner_id=user_id).first()
+
+        json = user.to_dict
+
         return JsonResponse(json)

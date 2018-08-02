@@ -167,7 +167,7 @@ class Owner(models.Model):
     owner_phone = models.IntegerField(blank=True, null=True)
     owner_sex = models.IntegerField(blank=True, null=True)
     owner_age = models.IntegerField(blank=True, null=True)
-    owner_marriage = models.IntegerField(db_column='owner_Marriage', blank=True, null=True)  # Field name made lowercase.
+    married = models.IntegerField(blank=True, null=True)
     owner_car = models.IntegerField(blank=True, null=True)
     owner_icon = models.CharField(max_length=256, blank=True, null=True)
 
@@ -178,7 +178,8 @@ class Owner(models.Model):
             'number': self.number,
             'username': self.owner_name,
             'sex': self.owner_sex,
-            'phone': self.owner_phone
+            'phone': self.owner_phone,
+            'car_no': self.owner_car
         }
 
     class Meta:
