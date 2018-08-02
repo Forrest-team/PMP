@@ -5,7 +5,6 @@
 #   * Make sure each ForeignKey has `on_delete` set to the desired behavior.
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
-from datetime import datetime
 from django.db import models
 
 
@@ -139,6 +138,7 @@ class Notice(models.Model):
     notice_id = models.AutoField(primary_key=True)
     comment = models.TextField(blank=True, null=True)
     create_time = models.DateTimeField()
+    customers = models.ManyToManyField(Customer, through='Relationship11')
 
     class Meta:
         managed = False
@@ -153,21 +153,6 @@ class Orders(models.Model):
     server_project = models.IntegerField(blank=True, null=True)
     create_time = models.DateTimeField()
     end_time = models.DateTimeField()
-    count = models.IntegerField(default=1)
-    status = models.IntegerField(default=0)
-
-    def to_dict(self):
-        return {
-            'order_id ': self.order_id,
-            'owner': self.owner,
-            'engineering': self.engineering,
-            'customer': self.customer,
-            'server_project': self.server_project,
-            'create_time': self.create_time,
-            'end_time': self.end_time,
-            'count': self.count,
-            'status': self.status
-        }
 
     class Meta:
         managed = False
@@ -176,11 +161,13 @@ class Orders(models.Model):
 
 class Owner(models.Model):
     owner_id = models.AutoField(primary_key=True)
+    number = models.CharField(max_length=16, unique=True)
+    password = models.CharField(max_length=64)
     owner_name = models.CharField(max_length=20, blank=True, null=True)
     owner_phone = models.IntegerField(blank=True, null=True)
     owner_sex = models.IntegerField(blank=True, null=True)
     owner_age = models.IntegerField(blank=True, null=True)
-    owner_marriage = models.IntegerField(db_column='owner_Marriage', blank=True, null=True)
+    owner_marriage = models.IntegerField(db_column='owner_Marriage', blank=True, null=True)  # Field name made lowercase.
     owner_car = models.IntegerField(blank=True, null=True)
     owner_icon = models.CharField(max_length=256, blank=True, null=True)
 
@@ -201,41 +188,3 @@ class Security(models.Model):
     class Meta:
         managed = False
         db_table = 'security'
-
-
-class House(models.Model):
-    house_id = models.AutoField(primary_key=True)
-    owner = models.ForeignKey(Owner, on_delete=None)
-    address = models.CharField(max_length=200)#地址
-    img = models.CharField(max_length=200)#图片
-    type = models.IntegerField()#租赁或是买卖{0:租赁,1:买卖}
-    price = models.FloatField()#价格
-    acreage = models.IntegerField()#房屋面积
-    unit = models.CharField(max_length=50)#房间单元 如几室几厅
-    deposit = models.FloatField(default=0)  # 房屋押金
-
-    @property
-    def to_dict(self):
-        return {
-            'acreage': self.acreage,
-            'img': self.img,
-            'price': self.price,
-            'address': self.address,
-            'unit': self.unit,
-            'deposit': self.deposit
-        }
-
-    class Meta:
-        db_table = 'house'
-
-
-class HouseOrderModel(models.Model):
-    id = models.AutoField(primary_key=True)
-    house = models.ForeignKey(House, on_delete=None)
-    start_time = models.DateTimeField(default=datetime.now())
-    days = models.IntegerField(null=True, blank=True)
-    status = models.IntegerField(default=0)#订单状态{0:待处理,1:处理中,2:处理完毕, 3:拒单, 4:取消}
-    reason = models.CharField(max_length=200)
-
-    class Meta:
-        db_table = 'house_order'
