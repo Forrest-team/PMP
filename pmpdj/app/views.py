@@ -93,4 +93,24 @@ def user_mine_info(request):
     """
     if request.method == 'GET':
         user = request.session.get('user_id')
-        return render(request, 'mine_info.html', {'user': user})
+        return render(request, 'user/mine_info.html', {'user': user})
+
+
+def living_pay(request):
+    """
+    生活缴费
+    :param request:
+    :return:
+    """
+    user = request.session.get('user_id')
+    return render(request, 'user/living_pay.html', {'user': user})
+
+
+def update_info(request):
+    """
+    修改住户信息
+    :param request:
+    :return:
+    """
+    user = request.session.get('user_id')
+    return render(request, 'user/update_info.html', {'user': user})

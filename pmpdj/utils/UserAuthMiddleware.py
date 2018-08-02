@@ -7,10 +7,10 @@ class UserMiddle(MiddlewareMixin):
 
     def process_request(self, request):
 
-        need_login = ['/MineInfo/', ]
+        need_login = ['/user/mineInfo', '/user/livingPay']
 
         if request.path in need_login:
 
             if 'user_id' not in request.session:
 
-                return HttpResponseRedirect('/user/login/')
+                return HttpResponseRedirect('/user/login')
