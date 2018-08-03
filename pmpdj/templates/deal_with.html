@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/js/jquery-1.11.1.min.js"></script>
+
+</head>
+<body>
+        {% for line in content %}
+
+            <tr>
+                <p class="neirong"> {{ line.complain_content }}</p>
+
+                <p class="neirong" name="owner_id" > {{ line.complain_id }}</p>
+            <button class="remove" >删除</button>
+            </tr>
+            <br>
+        {% endfor %}
+        <script>
+            $(function () {
+                $('.remove').click(function () {
+                    alert($('.this'));
+                    $('.neirong').hide();
+                })
+            })
+        </script>
+</body>
+</html>

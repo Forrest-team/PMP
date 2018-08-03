@@ -5,15 +5,20 @@
     <title>Title</title>
 </head>
 <body>
-       <form action="" method="post">
+       <form action="/templates/complain.html/" method="post">
             {% csrf_token %}
            <div>
                 <input name="owner_id" type="" value="请填写单元楼层号">
             <input name="contian" type="text" value="请填写您的投诉内容">
+                <input type="submit" value="提交">
            </div>
 
+           <div>申请门禁卡</div>
+                <form action="/templates/deal_with.html/" method="post">
 
-            <input type="submit" value="提交">
+                    <p3>办理<input size="1" value="">张</p3>
+                    <input type="submit" value="确认办理">
+                </form>
        </form>
 </body>
 </html>
