@@ -2,7 +2,11 @@ from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
+
 from app.models import ImgCode, Owner
+
+from app.models import ImgCode, Complain
+
 from utils.get_img_code import ValidCodeImg
 
 
@@ -94,3 +98,28 @@ def user_mine_info(request):
     if request.method == 'GET':
         user = request.session.get('user_id')
         return render(request, 'mine_info.html', {'user': user})
+
+    return render(request, 'login.html')
+
+
+def complain(request):
+    """
+    :param request:业主投诉信息
+    :return:
+    """
+    if request.method == 'GET':
+        return render(request, 'complain.html')
+
+    if request.method == 'POST':
+        owner_id = request.session.user_id
+        cont = request.POST.get('contian')
+        status = '待处理'
+        Complain.objects.create(complain_content=cont, owner_id=owner_id, complain_status=status)
+        data = {'cont': cont, 'status': status}
+        return JsonResponse(data)
+
+
+
+
+
+
