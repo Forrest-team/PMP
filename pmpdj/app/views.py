@@ -2,10 +2,7 @@ from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
 
 
-from app.models import ImgCode, Owner
-
-from app.models import ImgCode, Complain
-
+from app.models import ImgCode, Owner, Complain
 from utils.get_img_code import ValidCodeImg
 
 
@@ -50,7 +47,11 @@ def login(request):
 
 
 def logout(request):
-
+    """
+    退出登录，清除session数据
+    :param request:
+    :return:
+    """
     if request.method == 'GET':
 
         # 清除session中的用户数据
@@ -129,13 +130,11 @@ def update_info(request):
         Owner.objects.filter(owner_id=user_id).update(owner_name=username,
                                                       owner_phone=telephone,
                                                       owner_sex=sex)
-
         json = {
             'code': 200,
         }
 
         return JsonResponse(json)
-
 
 
 def complain(request):
@@ -181,7 +180,7 @@ def del_deal(request):
 
 
 def entrance_card(request):
-    #门禁卡办理
+    # 门禁卡办理
     if request.method == 'GET':
         pass
     return render(request, 'complain.html')
@@ -200,4 +199,3 @@ def get_user_no(request):
         json = user.to_dict
 
         return JsonResponse(json)
-
