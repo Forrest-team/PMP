@@ -139,7 +139,6 @@ class Notice(models.Model):
     notice_id = models.AutoField(primary_key=True)
     comment = models.TextField(blank=True, null=True)
     create_time = models.DateTimeField()
-    customers = models.ManyToManyField(Customer, through='Relationship11')
 
     class Meta:
         managed = False
@@ -154,6 +153,21 @@ class Orders(models.Model):
     server_project = models.IntegerField(blank=True, null=True)
     create_time = models.DateTimeField()
     end_time = models.DateTimeField()
+    count = models.IntegerField(default=1)
+    status = models.IntegerField(default=0)
+
+    def to_dict(self):
+        return {
+            'order_id ': self.order_id,
+            'owner': self.owner,
+            'engineering': self.engineering,
+            'customer': self.customer,
+            'server_project': self.server_project,
+            'create_time': self.create_time,
+            'end_time': self.end_time,
+            'count': self.count,
+            'status': self.status
+        }
 
     class Meta:
         managed = False
@@ -162,13 +176,11 @@ class Orders(models.Model):
 
 class Owner(models.Model):
     owner_id = models.AutoField(primary_key=True)
-    number = models.CharField(max_length=16, unique=True)
-    password = models.CharField(max_length=64)
     owner_name = models.CharField(max_length=20, blank=True, null=True)
     owner_phone = models.IntegerField(blank=True, null=True)
     owner_sex = models.IntegerField(blank=True, null=True)
     owner_age = models.IntegerField(blank=True, null=True)
-    owner_marriage = models.IntegerField(db_column='owner_Marriage', blank=True, null=True)  # Field name made lowercase.
+    owner_marriage = models.IntegerField(db_column='owner_Marriage', blank=True, null=True)
     owner_car = models.IntegerField(blank=True, null=True)
     owner_icon = models.CharField(max_length=256, blank=True, null=True)
 

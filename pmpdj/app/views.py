@@ -1,9 +1,17 @@
 from django.core.paginator import Paginator
+
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from app.models import ImgCode, Owner, HouseOrderModel, Orders, House
+
+from django.db.models import Q
+from django.http import JsonResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect
+
+from app.models import ImgCode, House, HouseOrderModel, Orders, Owner
+
 from utils.get_img_code import ValidCodeImg
 
 
@@ -41,7 +49,7 @@ def login(request):
             ctx = {'code': 1002, 'msg': '用户名或密码输入错误'}
             return render(request, 'login.html', ctx)
 
-        request.session['user_id'] = user.number
+        request.session['user_id'] = user.owner_id
         # 设置session值存活时间为一天(86400秒)
         request.session.set_expiry(86400)
 
@@ -94,32 +102,15 @@ def user_mine_info(request):
     """
     if request.method == 'GET':
         user = request.session.get('user_id')
-        return render(request, 'user/mine_info.html', {'user': user})
-
-
-def living_pay(request):
-    """
-    生活缴费
-    :param request:
-    :return:
-    """
-    user = request.session.get('user_id')
-    return render(request, 'user/living_pay.html', {'user': user})
-
-
-def update_info(request):
-    """
-    修改住户信息
-    :param request:
-    :return:
-    """
-    user = request.session.get('user_id')
-    return render(request, 'user/update_info.html', {'user': user})
+        return render(request, 'mine_info.html', {'user': user})
 
 
 def rs_house(request):
-    if request.method == 'GET':
-        return redirect('/user/rs_house/', args=(2, 2))
+    houses = House.objects.all()
+    paginator = Paginator(houses, 9)
+    page = request.GET.get('page', 1)
+    houses_list = paginator.page(page).object_list
+    return render(request, 'rs_house.html', {'houses_list': houses_list})
 
 
 def rs_house_info(request, cid, sid):
@@ -130,6 +121,109 @@ def rs_house_info(request, cid, sid):
         :param:cid类型(租赁或买卖){0:租赁,1:买卖}
         :param:sid筛选类型{0:升序,1:降序}
         """
+    if request.method == 'GET':
+        if cid:
+            houses = House.objects.filter(type=cid)
+            if sid == 0:
+                houses.order_by('price')
+            else:
+                houses.order_by('-price')
+        else:
+            houses = House.objects.all()
+            if sid == 0:
+                houses.order_by('price')
+            else:
+                houses.order_by('-price')
+        paginator = Paginator(houses, 9)
+        page = request.GET.get('page', 1)
+        houses_list = paginator.page(page).object_list
+        return render(request, 'rs_house.html', {'houses_list': houses_list})
+
+
+def order_house(request):
+    """
+    预约业主
+    :param request: GET
+    :return: 预约页面
+    :param request: POST
+    :return: 产生订单
+    """
+    if request.method == 'GET':
+        return render(request, 'order_house.html')
+    if request.method == 'POST':
+        owner = request.session['user_id']
+        start_time = request.POST.get('start_time')
+        days = request.POST.get('days')
+        HouseOrderModel.objects.create(owner=owner, start_time=start_time, days=days)
+        return redirect('/user/house_order/')
+
+
+def newhouse(request):
+    """
+    发布业主个人租赁买卖房源
+    :param request: GET
+    :return: 发布房源页面
+    :param request: POST
+    :return: 将房源信息存入数据库,返回业主个人中心页面
+    """
+    if request.method == 'GET':
+        return render(request, 'newhouse.html')
+    if request.method == 'POST':
+        owner = request.session['user_id']
+        address = request.POST.get('address')
+        img = request.FILES.get('img')# 图片
+        price = request.POST.get('price')  # 价格
+        acreage = request.POST.get('acreage')# 房屋面积
+        unit = request.POST.get('unit')  # 房间单元 如几室几厅
+        deposit = request.POST.get('deposit')# 房屋押金
+        House.objects.create(owner=owner, address=address, img=img, price=price, acreage=acreage,unit=unit, deposit=deposit)
+        return redirect('/user/index/')
+
+
+def house_lorder(request):
+    """
+    展示客户订单
+    :param request: GET
+    :return: 订单展示
+    :param request: POST
+    :return: 处理订单,点击处理,状态变为处理中,点击完成或拒单,房源信息从房源展示页面移除
+    """
+    if request.method == 'GET':
+        owner = request.session['user_id']
+        houses = House.objects.filter(owner=owner)
+        orders = []
+        for house in houses:
+            orders.extend(HouseOrderModel.objects.filter(house=house))
+        return render(request, 'house_lorder.html', {'orders': orders})
+    if request.method == 'POST':
+        order_id = request.POST.get('order_id')
+        order = HouseOrderModel.objects.get(id=order_id)
+        order_status = request.POST.get('status')
+        if order_status == 0:#订单状态{0:待处理,1:处理中,2:处理完毕, 3:拒单, 4:取消}
+            order.status = 1
+            order.save()
+        if order_status == 1:
+            order.status = 2
+            order.save()
+        return redirect('/user/house_lorder/')
+
+
+def rs_house(request):
+    if request.method == 'GET':
+        return redirect('/user/rs_house/', args=(2, 2))
+
+
+def rs_house_info(request, cid, sid):
+    """
+    展示小区所有租赁买卖房源
+    :param
+    request: GET
+    :return: house信息
+    :param: cid类型(租赁或买卖)
+    {0: 租赁, 1: 买卖}
+    :param: sid筛选类型
+    {0: 升序, 1: 降序}
+    """
     if request.method == 'GET':
         if cid == 0 or cid == 1:
             houses = House.objects.filter(type=cid)

@@ -19,13 +19,18 @@ from app import views
 
 urlpatterns = [
     path('login/', views.login, name='login'),
-    path('logout/', views.logout, name='logout'),
     path('getImgCode/', views.get_img_code, name='getImgCode'),
+    path(r'rs_house/?P<int:cid>/?P<int:sid>', views.rs_house, name='rs_house'),
+    path(r'rs_house/', views.rs_house, name='rs_house'),
     path('mineInfo/', views.user_mine_info, name='mineInfo'),
+<<<<<<< HEAD
     path('livingPay/', views.living_pay, name='livingPay'),
     path('updateInfo/', views.update_info, name='updateInfo'),
     re_path(r'rs_house/$', views.rs_house, name='rs_house'),
     path(r'rs_house/<int:cid>/<int:sid>/', views.rs_house_info, name='rs_house_info'),
     path('newhouse/', views.newhouse, name='newhouse')
+=======
+>>>>>>> c6c81632b6b83302922b044c7df9bfa9b6ae7b06
 ]
+
 
