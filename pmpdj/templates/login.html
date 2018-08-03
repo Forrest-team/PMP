@@ -93,14 +93,17 @@
             {% csrf_token %}
 			<h2>登录</h2><p class="tyg-p">欢迎访问  XX物业</p>
 			<div style="margin:5px 0px;">
-				<input type="text" required="required" name="number" placeholder="请输入账号..."/>
+				<input class="focus-hide" type="text" required="required" name="number" placeholder="请输入账号..."/>
 			</div>
 			<div style="margin:5px 0px;">
-				<input type="text" required="required" name="password" placeholder="请输入密码..."/>
+				<input class="focus-hide" type="text" required="required" name="password" placeholder="请输入密码..."/>
 			</div>
 			<div style="margin:5px 0px;">
-				<input type="text" name="img_code" style="width:150px;" placeholder="请输入验证码..."/>
+				<input class="focus-hide" type="text" name="img_code" style="width:160px;" placeholder="请输入验证码..."/>
 				<img id="verify-img" src="" style="vertical-align:bottom;" alt="验证码"/>
+			</div>
+            <div id="msg" style="padding-top: 5px;padding-bottom: -5px">
+                <p style="color: red;">{{ msg }}</p>
 			</div>
 			<button type="submit" >登<span style="width:20px;"></span>录</button>
 		</form>
@@ -131,7 +134,11 @@ DD_belatedPNG.fix(".png");
                     var timestamp = new Date().getTime();
                     verify.attr('src', '/media/var_code.png' + '?' + timestamp );
                 }
-            });
+            })
+        });
+
+        $('.focus-hide').focus(function () {
+            $('#msg').hide()
         })
     })
 </script>
