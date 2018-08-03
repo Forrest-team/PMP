@@ -115,7 +115,7 @@ def rs_house_info(request, cid, sid):
     :return: house信息
     :param:cid类型(租赁或买卖){0:租赁,1:买卖}
     :param:sid筛选类型{0:升序,1:降序}
-        """
+    """
     if request.method == 'GET':
         if cid:
             houses = House.objects.filter(type=cid)
@@ -171,7 +171,10 @@ def newhouse(request):
         acreage = request.POST.get('acreage')  # 房屋面积
         unit = request.POST.get('unit')  # 房间单元 如几室几厅
         deposit = request.POST.get('deposit')  # 房屋押金
-        House.objects.create(owner=owner, address=address, img=img, price=price, acreage=acreage,unit=unit, deposit=deposit)
+        House.objects.create(owner=owner, address=address,
+                             img=img, price=price,
+                             acreage=acreage, unit=unit, deposit=deposit)
+
         return redirect('/user/index/')
 
 
@@ -291,7 +294,7 @@ def del_deal(request):
         return render(request, 'del_deal.html')
 
     if request.method == 'POST':
-        owner_id = request.POST.get('owner_id')
+        owner_id = request.POST.get('user_id')
         deal = Complain.objects.filter(owner_id=owner_id).first()
 
         Complain.objects.filter(complain_content=deal.complain_content).delete()
@@ -319,14 +322,6 @@ def get_user_no(request):
         json = user.to_dict
 
         return JsonResponse(json)
-
-    if request.method == 'GET':
-        return render(request, 'request_service.html')
-    if request.method == 'POST':
-        owner = request.session['user_id']
-        type = request.POST.get('server_project')
-        Orders.objects.create(owner=owner, server_project=type)
-        return redirect('/user/orders/')
 
 
 def order_to_property(request):

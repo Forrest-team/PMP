@@ -156,6 +156,7 @@ class Orders(models.Model):
     count = models.IntegerField(default=1)
     status = models.IntegerField(default=0)
 
+    @property
     def to_dict(self):
         return {
             'order_id ': self.order_id,
