@@ -1,6 +1,5 @@
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse
 
 from app.models import ImgCode, Owner
 from utils.get_img_code import ValidCodeImg
@@ -36,11 +35,10 @@ def login(request):
             return render(request, 'login.html', ctx)
         user = Owner.objects.filter(number=number, password=password).first()
         if not user:
-
             ctx = {'code': 1002, 'msg': '用户名或密码输入错误'}
             return render(request, 'login.html', ctx)
-
-        request.session['user_id'] = user.number
+        # 成功登录后，保存user_id到服务端session中
+        request.session['user_id'] = user.owner_id
         # 设置session值存活时间为一天(86400秒)
         request.session.set_expiry(86400)
 
@@ -92,8 +90,10 @@ def user_mine_info(request):
     :return:
     """
     if request.method == 'GET':
-        user = request.session.get('user_id')
-        return render(request, 'user/mine_info.html', {'user': user})
+        user_id = request.session.get('user_id')
+        user = Owner.objects.filter(owner_id=user_id).first()
+        if user:
+            return render(request, 'user/mine_info.html', {'user': user})
 
 
 def living_pay(request):
@@ -112,21 +112,37 @@ def update_info(request):
     :param request:
     :return:
     """
-    user = request.session.get('user_id')
-    return render(request, 'user/update_info.html', {'user': user})
+    if request.method == 'GET':
+        user = request.session.get('user_id')
+        return render(request, 'user/update_info.html', {'user': user})
+
+    if request.method == 'POST':
+        user_id = request.session.get('user_id')
+        username = request.POST.get('username')
+        telephone = request.POST.get('phone')
+        sex_ = request.POST.get('sex')
+        sex = 1 if sex_ == '男' else '0'
+        Owner.objects.filter(owner_id=user_id).update(owner_name=username,
+                                                      owner_phone=telephone,
+                                                      owner_sex=sex)
+
+        json = {
+            'code': 200,
+        }
+
+        return JsonResponse(json)
 
 
 def get_user_no(request):
     """
-    通过user_id 拿到模型，返回房屋等数据
+    通过user_id 拿到模型Owner，返回房屋等数据
     :param request:
     :return:
     """
     if request.method == 'GET':
-        number = request.session.get('user_id')
-        user = Owner.objects.filter(number=number).first()
-        json = {
-            'code': 200,
-            'user': user.to_dict
-        }
+        user_id = request.session.get('user_id')
+        user = Owner.objects.filter(owner_id=user_id).first()
+
+        json = user.to_dict
+
         return JsonResponse(json)

@@ -10,9 +10,6 @@
 <script type="text/javascript" src="/static/js/jquery.js"></script>
 <script type="text/javascript" src="/static/js/global.js"></script>
 <script type="text/javascript" src="/static/js/hm.js"></script>
-<script type="text/javascript" src="/static/js/script.js"></script>
-
-
 
 </head>
 <body>
@@ -47,13 +44,13 @@
 						</li>
                          <li class="narrow_wrap">
                             {% if user %}
-							<a class="nav_btn" href="/user/login/">
+							<a class="nav_btn" href="/user/logout/">
 								退出
 								<b></b>
 								<div></div>
 							</a>
                             {% else %}
-                            <a class="nav_btn" href="/user/logout/">
+                            <a class="nav_btn" href="/user/login/">
 								业主登录
 								<b></b>
 								<div></div>

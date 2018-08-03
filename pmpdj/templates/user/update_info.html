@@ -10,9 +10,6 @@
 <script type="text/javascript" src="/static/js/jquery.js"></script>
 <script type="text/javascript" src="/static/js/global.js"></script>
 <script type="text/javascript" src="/static/js/hm.js"></script>
-<script type="text/javascript" src="/static/js/script.js"></script>
-
-
 
 </head>
 <body>
@@ -47,13 +44,13 @@
 						</li>
                          <li class="narrow_wrap">
                             {% if user %}
-							<a class="nav_btn" href="/user/login/">
+							<a class="nav_btn" href="/user/logout/">
 								退出
 								<b></b>
 								<div></div>
 							</a>
                             {% else %}
-                            <a class="nav_btn" href="/user/logout/">
+                            <a class="nav_btn" href="/user/login/">
 								业主登录
 								<b></b>
 								<div></div>
@@ -165,27 +162,38 @@
 
 		<!--内容-->
 		<div class="gsjj_nr">
-			<form action="" method="post" class="messages">
+			<form id="form-user-info" class="messages">
+                {% csrf_token %}
+                <div class="messlist">
+			      	<label>账 号：</label>
+			      	<input id="houseId" name="houseId" type="text" disabled="disabled" />
+			      	<div class="clears"></div>
+			    </div>
 			    <div class="messlist">
 			      	<label>*姓名：</label>
-			      	<input type="text" placeholder="姓名" />
+			      	<input name="username" type="text" placeholder="姓名" />
 			      	<div class="clears"></div>
 			    </div>
 			    <div class="messlist">
-			    	<label>*手机号：</label>
-			      	<input type="text" placeholder="手机号" />
+			    	<label>*电话：</label>
+			      	<input name="phone" type="text" placeholder="电话号码" />
 			      	<div class="clears"></div>
 			    </div>
-			    <div class="messlist textareas">
-			      	<label>*留言内容：</label>
-			      	<textarea placeholder="留言内容"></textarea>
+                <div>
+			    	<label style="margin-left: 5.8%; font-size:14px;">*性别：</label>
+{#                    <select name="sex" id="sex">#}
+{#                        <option value="男">男</option>#}
+{#                        <option value="女">女</option>#}
+{#                    </select>#}
+                    <input type="radio" name="sex" value="男" checked>男&nbsp;&nbsp;
+				    <input type="radio" name="sex" value="女">女
 			      	<div class="clears"></div>
 			    </div>
+
 			    <div class="messsub">
-			      	<input type="submit" value="提交留言" style="background:#00a3eb;color:#fff;" />
-			      	<input type="reset" value="重填留言" />
+			      	<input style="margin-left: 26%;background-color: #00abeb" type="submit" value="提交" style="background:#00a3eb;color:#fff;" />
 			    </div>
-			</form>	 
+			</form>
 		</div>
 	</div>
 </div>
@@ -223,7 +231,26 @@
 	<p>版权所有 四川new物业管理有限公司 黔ICP备100000000号<br>
 技术支持：Master 中国网络</p>
 </div>
+<script>
+    $(document).ready(function () {
+        $.get('/user/getUserNo', function (data) {
+            $('#houseId').val(data.number);
+        });
 
+        $('#form-user-info').submit(function () {
+            var data_all = $(this).serialize();
+            $.post('/user/updateInfo/', data_all, function (data) {
+                if (data.code == 200) {
+                   location.href = '/user/mineInfo/'
+                } else {
+                    alert('请求失败')
+                }
+            });
+            return false
+        });
+    });
+
+</script>
 
 </body>
 </html>

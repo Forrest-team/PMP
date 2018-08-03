@@ -10,9 +10,6 @@
 <script type="text/javascript" src="/static/js/jquery.js"></script>
 <script type="text/javascript" src="/static/js/global.js"></script>
 <script type="text/javascript" src="/static/js/hm.js"></script>
-<script type="text/javascript" src="/static/js/script.js"></script>
-
-
 
 </head>
 <body>
@@ -47,13 +44,13 @@
 						</li>
                          <li class="narrow_wrap">
                             {% if user %}
-							<a class="nav_btn" href="/user/login">
+							<a class="nav_btn" href="/user/logout">
 								退出
 								<b></b>
 								<div></div>
 							</a>
                             {% else %}
-                            <a class="nav_btn" href="/user/logout">
+                            <a class="nav_btn" href="/user/login">
 								业主登录
 								<b></b>
 								<div></div>
@@ -165,32 +162,11 @@
 
 		<!--内容-->
 		<div class="gsjj_nr">
-			<form action="" method="post" class="messages">
-                <div class="messlist">
-			      	<label>*账号：</label>
-			      	<input type="text" disabled />
-			      	<div class="clears"></div>
-			    </div>
-			    <div class="messlist">
-			      	<label>*姓名：</label>
-			      	<input type="text" placeholder="姓名" />
-			      	<div class="clears"></div>
-			    </div>
-			    <div class="messlist">
-			    	<label>*手机号：</label>
-			      	<input type="text" placeholder="手机号" />
-			      	<div class="clears"></div>
-			    </div>
-			    <div class="messlist textareas">
-			      	<label>*留言内容：</label>
-			      	<textarea placeholder="留言内容"></textarea>
-			      	<div class="clears"></div>
-			    </div>
-			    <div class="messsub">
-			      	<input type="submit" value="提交留言" style="background:#00a3eb;color:#fff;" />
-			      	<input type="reset" value="重填留言" />
-			    </div>
-			</form>	 
+            <ul class="messages">
+                <li class="messlist"><span>账 号： </span>{{ user.number }}</li>
+                <li class="messlist"><span>姓 名：</span>{{ user.owner_name }}</li>
+                <li class="messlist"><span>手机号：</span>{{ user.owner_phone }}</li>
+            </ul>
 		</div>
 	</div>
 </div>
@@ -229,13 +205,5 @@
 技术支持：Master 中国网络</p>
 </div>
 
-
 </body>
-<script>
-    $(document).ready(function () {
-        $.get('/user/getUserNo', function (data) {
-
-        })
-    })
-</script>
 </html>
