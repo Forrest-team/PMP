@@ -164,7 +164,7 @@ class Owner(models.Model):
     number = models.CharField(max_length=16, unique=True)
     password = models.CharField(max_length=64)
     owner_name = models.CharField(max_length=20, blank=True, null=True)
-    owner_phone = models.IntegerField(blank=True, null=True)
+    owner_phone = models.CharField(max_length=11, blank=True, null=True)
     owner_sex = models.IntegerField(blank=True, null=True)
     owner_age = models.IntegerField(blank=True, null=True)
     married = models.IntegerField(blank=True, null=True)
