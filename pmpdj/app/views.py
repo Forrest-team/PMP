@@ -37,6 +37,7 @@ def login(request):
         if not user:
             ctx = {'code': 1002, 'msg': '用户名或密码输入错误'}
             return render(request, 'login.html', ctx)
+        # 成功登录后，保存user_id到服务端session中
         request.session['user_id'] = user.owner_id
         # 设置session值存活时间为一天(86400秒)
         request.session.set_expiry(86400)
