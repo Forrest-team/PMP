@@ -5,6 +5,7 @@
 #   * Make sure each ForeignKey has `on_delete` set to the desired behavior.
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
+from datetime import datetime
 from django.db import models
 
 
@@ -188,3 +189,41 @@ class Security(models.Model):
     class Meta:
         managed = False
         db_table = 'security'
+
+
+class House(models.Model):
+    house_id = models.AutoField(primary_key=True)
+    owner = models.ForeignKey(Owner, on_delete=None)
+    address = models.CharField(max_length=200)#地址
+    img = models.CharField(max_length=200)#图片
+    type = models.IntegerField()#租赁或是买卖{0:租赁,1:买卖}
+    price = models.FloatField()#价格
+    acreage = models.IntegerField()#房屋面积
+    unit = models.CharField(max_length=50)#房间单元 如几室几厅
+    deposit = models.FloatField(default=0)  # 房屋押金
+
+    @property
+    def to_dict(self):
+        return {
+            'acreage': self.acreage,
+            'img': self.img,
+            'price': self.price,
+            'address': self.address,
+            'unit': self.unit,
+            'deposit': self.deposit
+        }
+
+    class Meta:
+        db_table = 'house'
+
+
+class HouseOrderModel(models.Model):
+    id = models.AutoField(primary_key=True)
+    house = models.ForeignKey(House, on_delete=None)
+    start_time = models.DateTimeField(default=datetime.now())
+    days = models.IntegerField(null=True, blank=True)
+    status = models.IntegerField(default=0)#订单状态{0:待处理,1:处理中,2:处理完毕, 3:拒单, 4:取消}
+    reason = models.CharField(max_length=200)
+
+    class Meta:
+        db_table = 'house_order'
