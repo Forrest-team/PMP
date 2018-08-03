@@ -13,25 +13,26 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.urls import path
+from django.urls import path, re_path
 
 from app import views
 
 urlpatterns = [
     path('login/', views.login, name='login'),
-    path('logout/', views.logout, name='logout'),
     path('getImgCode/', views.get_img_code, name='getImgCode'),
-
     path('mineInfo/', views.user_mine_info, name='mineInfo'),
-<<<<<<< HEAD
-
     path('complain/', views.complain, name='complain'),
     path('index/', views.index, name='index'),
-
-=======
     path('livingPay/', views.living_pay, name='livingPay'),
     path('updateInfo/', views.update_info, name='updateInfo'),
     path('getUserNo/', views.get_user_no, name='getUserNo'),
->>>>>>> 33bb68dc24b0a75e9b7c4ca5fc986294b5b5dc85
+    path(r'rs_house/?P<int:cid>/?P<int:sid>', views.rs_house, name='rs_house'),
+    path(r'rs_house/', views.rs_house, name='rs_house'),
+    path('mineInfo/', views.user_mine_info, name='mineInfo'),
+    re_path(r'rs_house/$', views.rs_house, name='rs_house'),
+    path(r'rs_house/<int:cid>/<int:sid>/', views.rs_house_info, name='rs_house_info'),
+    path('newhouse/', views.newhouse, name='newhouse')
+
 ]
+
 
