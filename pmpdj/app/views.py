@@ -57,10 +57,10 @@ def logout(request):
         # request.session.flush()
         # del request.session['user_id']
         request.session.clear()
+        # 将所有Session失效日期小于当前日期的数据删除
+        request.session.clear_expired()
 
-        response = HttpResponseRedirect('/user/login')
-
-        return response
+        return HttpResponseRedirect('/user/login')
 
 
 def get_img_code(request):
@@ -245,12 +245,12 @@ def house_order(request):
 
 def request_service(request):
     """
-        申请物业服务
-        :param request: GET
-        :return: 填写服务内容
-        :param request: POST
-        :return: 存入数据库,返回服务订单页面
-        """
+    申请物业服务
+    :param request: GET
+    :return: 填写服务内容
+    :param request: POST
+    :return: 存入数据库,返回服务订单页面
+    """
     if request.method == 'GET':
         return render(request, 'request_service.html')
     if request.method == 'POST':
